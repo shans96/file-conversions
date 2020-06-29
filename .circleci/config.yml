@@ -6,11 +6,15 @@ jobs:
       - image: circleci/openjdk:14-jdk-buster-node
     steps:
       - checkout
+      - run: mvn verify sonar:sonar
       - run: java -version
       - run: mvn dependency:go-offline
       - run: mvn package
-      - run: mvn verify sonar:sonar
       - store_test_results:
           path: target/surefire-reports
 
-
+workflows:
+  main:
+    jobs:
+      - build:
+          context: SonarCloud
