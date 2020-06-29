@@ -9,9 +9,7 @@ jobs:
       - run: java -version
       - run: mvn dependency:go-offline
       - run: mvn package
-      - run:
-        name: Analyze on SonarCloud
-        command: mvn verify sonar:sonar
+      - run: mvn verify sonar:sonar
       - store_test_results:
           path: target/surefire-reports
 
