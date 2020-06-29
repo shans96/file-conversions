@@ -1,15 +1,15 @@
 version: 2.1
 
-orbs:
-  maven: circleci/maven@0.0.12
-
-workflows:
-  maven_test:
-    jobs:
-      build:
-        docker:
-          - image: circleci/openjdk:14-jdk-buster
-        steps:
-          - maven/test # checkout, build, test, and upload test results
+jobs:
+  build:
+    docker:
+      - image: circleci/openjdk:14-jdk-buster
+    steps:
+      - checkout
+      - run: java -version
+      - run: mvn dependency:go-offline
+      - run: mvn package
+      - store_test_results:
+          path: target/surefire-reports
 
 
