@@ -3,9 +3,13 @@ version: 2.1
 orbs:
   maven: circleci/maven@0.0.12
 
+
 workflows:
   maven_test:
-    docker:
-      - image: circleci/openjdk:14-jdk-buster
     jobs:
-      - maven/test # checkout, build, test, and upload test results
+      docker:
+        - image: circleci/openjdk:14-jdk-buster
+      steps:
+        - maven/test # checkout, build, test, and upload test results
+
+
