@@ -2,7 +2,7 @@ version: 2.1
 
 commands:
   setup:
-    description:"Checkout code and resolve dependencies"
+    description: "Checkout code and resolve dependencies"
     steps:
       - checkout
       - run: mvn dependency:go-offline
