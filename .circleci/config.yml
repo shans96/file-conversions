@@ -1,22 +1,32 @@
 version: 2.1
 
+commands:
+  setup:
+    description:"Checkout code and resolve dependencies"
+  steps:
+    - checkout
+    - run: mvn dependency:go-offline
+
 jobs:
   build:
     docker:
       - image: circleci/openjdk:14-jdk-buster-node
     steps:
-      - checkout
-      - run: mvn verify sonar:sonar
-      - run: java -version
-      - run: mvn dependency:go-offline
+      - setup
       - run: mvn package
+  test:
+    docker:
+      - image: circleci/openjdk:14-jdk-buster-node
+    steps:
+      - setup
+      - run: mvn verify sonar:sonar
+      - mvn test
       - store_test_results:
           path: target/surefire-reports
-      - store_artifacts:
-          path: /home/circleci/project/target/fileconversions-0.0.1-SNAPSHOT.jar
 
 workflows:
   main:
     jobs:
-      - build:
+      - build
+      - test:
           context: SonarCloud
