@@ -3,9 +3,9 @@ version: 2.1
 commands:
   setup:
     description:"Checkout code and resolve dependencies"
-  steps:
-    - checkout
-    - run: mvn dependency:go-offline
+    steps:
+      - checkout
+      - run: mvn dependency:go-offline
 
 jobs:
   build:
