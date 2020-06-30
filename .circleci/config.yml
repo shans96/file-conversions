@@ -20,7 +20,7 @@ jobs:
     steps:
       - setup
       - run: mvn verify sonar:sonar
-      - mvn test
+      - run: mvn test
       - store_test_results:
           path: target/surefire-reports
 
