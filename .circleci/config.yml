@@ -28,7 +28,6 @@ jobs:
       - image: circleci/openjdk:14-jdk-buster-node
     steps:
       - setup
-      - run: mvn cobertura:cobertura
       - run: bash <(curl -s https://codecov.io/bash)
 
 workflows:
