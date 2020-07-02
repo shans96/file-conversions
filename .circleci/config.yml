@@ -23,6 +23,11 @@ jobs:
       - run: mvn test
       - store_test_results:
           path: target/surefire-reports
+  check_coverage:
+    docker:
+      - image: circleci/openjdk:14-jdk-buster-node
+    steps:
+       - run: bash <(curl -s https://codecov.io/bash)
 
 workflows:
   main:
