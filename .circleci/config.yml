@@ -27,7 +27,8 @@ jobs:
     docker:
       - image: circleci/openjdk:14-jdk-buster-node
     steps:
-       - run: bash <(curl -s https://codecov.io/bash)
+      - setup
+      - run: bash <(curl -s https://codecov.io/bash)
 
 workflows:
   main:
