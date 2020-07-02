@@ -36,4 +36,4 @@ workflows:
       - build
       - test:
           context: SonarCloud
-      - verify
+      - check_coverage
