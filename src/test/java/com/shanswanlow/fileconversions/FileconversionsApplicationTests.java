@@ -5,12 +5,36 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
 class FileconversionsApplicationTests
 {
 	@Test
 	void contextLoads() { }
+
+	@Test
+	@DisplayName("Ensure that file extension removal removes the extension only.")
+	void testFileExtensionRemoval()
+	{
+		String caseOne = "foo.pdf";
+		String caseTwo = "bar.docx";
+		String caseThree = "baz.quux.doc";
+		String caseFour = "quuux";
+
+		assertAll("filenameExtensions",
+				() -> assertEquals("foo", FilenameUtils.removeExtension(caseOne)),
+				() -> assertEquals("bar", FilenameUtils.removeExtension(caseTwo)),
+				() -> assertEquals("baz.quux", FilenameUtils.removeExtension(caseThree)),
+				() -> assertEquals("quuux", FilenameUtils.removeExtension(caseFour))
+		);
+	}
+
+	@Test
+	@DisplayName("Ensure this class cannot be instantiated")
+	void testInstantiation()
+	{
+		assertThrows(IllegalStateException.class,
+				() -> new FilenameUtils());
+	}
 }
