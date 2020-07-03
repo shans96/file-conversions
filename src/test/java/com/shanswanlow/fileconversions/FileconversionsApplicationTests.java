@@ -29,12 +29,4 @@ class FileconversionsApplicationTests
 				() -> assertEquals("quuux", FilenameUtils.removeExtension(caseFour))
 		);
 	}
-
-	@Test
-	@DisplayName("Ensure this class cannot be instantiated")
-	void testInstantiation()
-	{
-		assertThrows(IllegalStateException.class,
-				() -> new FilenameUtils());
-	}
 }
