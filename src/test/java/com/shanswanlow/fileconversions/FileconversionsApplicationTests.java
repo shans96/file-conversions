@@ -25,10 +25,10 @@ class FileconversionsApplicationTests
 		String caseFour = "quuux";
 
 		assertAll("filenameExtensions",
-				() -> assertEquals(FilenameUtils.removeExtension(caseOne), "foo"),
-				() -> assertEquals(FilenameUtils.removeExtension(caseTwo), "bar"),
-				() -> assertEquals(FilenameUtils.removeExtension(caseThree), "baz.quux"),
-				() -> assertEquals(FilenameUtils.removeExtension(caseFour), "quuux")
+				() -> assertEquals("foo", FilenameUtils.removeExtension(caseOne)),
+				() -> assertEquals("bar", FilenameUtils.removeExtension(caseTwo)),
+				() -> assertEquals("baz.quux", FilenameUtils.removeExtension(caseThree)),
+				() -> assertEquals("quuux", FilenameUtils.removeExtension(caseFour))
 		);
 	}
 }
