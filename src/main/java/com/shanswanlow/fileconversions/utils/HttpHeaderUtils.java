@@ -1,7 +1,10 @@
 package com.shanswanlow.fileconversions.utils;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.springframework.http.HttpHeaders;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class HttpHeaderUtils
 {
     public static HttpHeaders createPDFResponseHeaders(String originalFilename)
