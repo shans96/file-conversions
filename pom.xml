@@ -10,7 +10,7 @@
 	</parent>
 	<groupId>com.shanswanlow</groupId>
 	<artifactId>fileconversions</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<name>fileconversions</name>
 	<description>Microservice that converts files.</description>
 
