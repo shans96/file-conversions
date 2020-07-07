@@ -1,5 +1,7 @@
 package com.shanswanlow.fileconversions.converter;
 
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
@@ -10,6 +12,7 @@ import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import java.io.*;
 import java.util.List;
 
+@NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class DocxConverter
 {
     public static byte[] docxToPDF(InputStream docStream) throws IOException
