@@ -3,12 +3,18 @@ package com.shanswanlow.fileconversions;
 import com.shanswanlow.fileconversions.utils.DocxUtils;
 import com.shanswanlow.fileconversions.utils.FilenameUtils;
 import com.shanswanlow.fileconversions.utils.HttpHeaderUtils;
+import com.shanswanlow.fileconversions.utils.PDFUtils;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.apache.pdfbox.pdmodel.PDDocumentInformation;
+import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 
@@ -64,5 +70,35 @@ class FileconversionsApplicationTests
 				() -> assertEquals(0, DocxUtils.getPages(emptyDocument)),
 				() -> assertEquals(0, DocxUtils.getPages(googleDocument)),
 				() -> assertEquals(4, DocxUtils.getPages(wordDocument)));
+	}
+
+	@Test
+	@DisplayName("Verify that documentToByteArray returns a PDF document without any modifications.")
+	void testDocumentToByteArray() throws IOException
+	{
+		// Note: This method is not testable at a binary level due to changing metadata such as creation date.
+		PDDocument testDocument = new PDDocument();
+		PDPage page = new PDPage();
+		testDocument.addPage(page);
+
+		PDDocument computedDocument = PDDocument.load(
+				PDFUtils.documentToByteArray(testDocument));
+		PDDocument expectedDocument = PDDocument.load(
+				new File("src/test/resources/emptyGeneratedDoc.pdf"));
+
+		PDDocumentInformation expectedInfo = expectedDocument.getDocumentInformation();
+		PDDocumentInformation computedInfo = computedDocument.getDocumentInformation();
+
+		String expectedText = new PDFTextStripper().getText(expectedDocument);
+		String computedText = new PDFTextStripper().getText(computedDocument);
+
+		assertAll("PDFGeneration",
+				() -> assertEquals(expectedDocument.getNumberOfPages(), computedDocument.getNumberOfPages()),
+				() -> assertEquals(expectedInfo.getCreator(), computedInfo.getCreator()),
+				() -> assertEquals(expectedInfo.getSubject(), computedInfo.getSubject()),
+				() -> assertEquals(expectedInfo.getTitle(), computedInfo.getTitle()),
+				() -> assertEquals(expectedInfo.getKeywords(), computedInfo.getKeywords()),
+				() -> assertEquals(expectedInfo.getAuthor(), computedInfo.getAuthor()),
+				() -> assertEquals(expectedText, computedText));
 	}
 }
