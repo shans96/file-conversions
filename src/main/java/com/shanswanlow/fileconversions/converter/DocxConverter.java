@@ -1,56 +1,39 @@
 package com.shanswanlow.fileconversions.converter;
 
+import com.shanswanlow.fileconversions.utils.PDFUtils;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.apache.pdfbox.pdmodel.PDDocument;
-import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
-import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 
 import java.io.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class DocxConverter
 {
     public static byte[] docxToPDF(InputStream docStream) throws IOException
     {
-        XWPFDocument document = new XWPFDocument(docStream);
-        List<XWPFParagraph> docParagraphs = document.getParagraphs();
-
+        List<XWPFParagraph> docParagraphs = new XWPFDocument(docStream)
+                .getParagraphs();
         PDDocument output = new PDDocument();
-        PDPage page = new PDPage();
-        output.addPage(page);
 
-        PDPageContentStream contentStream = new PDPageContentStream(output, page);
+        PDPageContentStream contentStream = PDFUtils.createWriteablePage(output);
 
-        int fontSize = 12;
-        contentStream.setFont(PDType1Font.HELVETICA, fontSize);
-        contentStream.beginText();
-        contentStream.newLineAtOffset(25, page.getMediaBox().getHeight() - 25);
+        PDFUtils.initializeWriteablePage(contentStream);
 
-        docParagraphs
-                .forEach(xwpfParagraph -> {
-                    try
-                    {
-                        contentStream.newLineAtOffset(0, -1.5f * 12.0f);
-                        contentStream.newLine();
-                        contentStream.showText(xwpfParagraph.getText());
-                    } catch (IOException e)
-                    {
-                        e.printStackTrace();
-                    } // ew
-                });
+        List<String> paragraphs = docParagraphs
+                .stream()
+                .map(xwpfParagraph -> xwpfParagraph.getText())
+                .collect(Collectors.toList());
 
-        contentStream.endText();
-        contentStream.close();
+        PDFUtils.writeTextToPage(contentStream, paragraphs);
 
-        ByteArrayOutputStream pdfOutputStream = new ByteArrayOutputStream();
+        PDFUtils.closeWriteablePage(contentStream);
 
-        output.save(pdfOutputStream);
-        output.close();
-        return pdfOutputStream.toByteArray();
+        return PDFUtils.documentToByteArray(output);
     }
 }
