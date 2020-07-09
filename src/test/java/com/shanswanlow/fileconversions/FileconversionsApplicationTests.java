@@ -130,7 +130,13 @@ class FileconversionsApplicationTests
 				.toByteArray());
 
 		String strippedText = new PDFTextStripper().getText(createdDocument);
-		assertEquals(expectedText.trim(), strippedText.trim());
+		String expectedTextTrimmed = expectedText
+				.replace("\\r", "")
+				.replace("\\n", "");
+		String strippedTextTrimmed = strippedText
+				.replace("\\r", "")
+				.replace("\\n", "");
+		assertEquals(expectedTextTrimmed, strippedTextTrimmed);
 	}
 
 }
