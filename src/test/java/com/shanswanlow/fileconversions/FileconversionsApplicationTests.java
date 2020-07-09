@@ -7,6 +7,8 @@ import com.shanswanlow.fileconversions.utils.PDFUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 import org.apache.pdfbox.pdmodel.PDPage;
+import org.apache.pdfbox.pdmodel.PDPageContentStream;
+import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.junit.jupiter.api.DisplayName;
@@ -14,9 +16,12 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -89,16 +94,43 @@ class FileconversionsApplicationTests
 		PDDocumentInformation expectedInfo = expectedDocument.getDocumentInformation();
 		PDDocumentInformation computedInfo = computedDocument.getDocumentInformation();
 
-		String expectedText = new PDFTextStripper().getText(expectedDocument);
-		String computedText = new PDFTextStripper().getText(computedDocument);
-
 		assertAll("PDFGeneration",
 				() -> assertEquals(expectedDocument.getNumberOfPages(), computedDocument.getNumberOfPages()),
 				() -> assertEquals(expectedInfo.getCreator(), computedInfo.getCreator()),
 				() -> assertEquals(expectedInfo.getSubject(), computedInfo.getSubject()),
 				() -> assertEquals(expectedInfo.getTitle(), computedInfo.getTitle()),
 				() -> assertEquals(expectedInfo.getKeywords(), computedInfo.getKeywords()),
-				() -> assertEquals(expectedInfo.getAuthor(), computedInfo.getAuthor()),
-				() -> assertEquals(expectedText, computedText));
+				() -> assertEquals(expectedInfo.getAuthor(), computedInfo.getAuthor())
+		);
 	}
+
+	@Test
+	@DisplayName("Verify that writing to a page renders the exact text.")
+	void testWriteTextToPage() throws IOException
+	{
+		List<String> testParagraphs = Arrays.asList("foo", "bar");
+		String expectedText = "foo\r\nbar\r\n";
+		PDDocument testDocument = new PDDocument();
+		PDPage testPage = new PDPage();
+		testDocument.addPage(testPage);
+		PDPageContentStream contentStream = new PDPageContentStream(testDocument, testPage);
+		contentStream.beginText();
+		contentStream.setFont(PDType1Font.HELVETICA, 12);
+
+		PDFUtils.writeTextToPage(contentStream, testParagraphs);
+
+		contentStream.endText();
+		contentStream.close();
+
+		ByteArrayOutputStream documentOutputStream = new ByteArrayOutputStream();
+		testDocument.save(documentOutputStream);
+		testDocument.close();
+
+		PDDocument createdDocument = PDDocument.load(documentOutputStream
+				.toByteArray());
+
+		String strippedText = new PDFTextStripper().getText(createdDocument);
+		assertEquals(expectedText, strippedText);
+	}
+
 }
