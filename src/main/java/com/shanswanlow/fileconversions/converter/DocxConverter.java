@@ -22,7 +22,7 @@ public class DocxConverter
                 .getParagraphs();
         PDDocument output = new PDDocument();
 
-        PDPageContentStream contentStream = PDFUtils.createWriteablePage(output);
+        PDPageContentStream contentStream = createWriteablePage(output);
 
         initializeWriteablePage(contentStream);
         writeTextToPage(contentStream, docParagraphs);
