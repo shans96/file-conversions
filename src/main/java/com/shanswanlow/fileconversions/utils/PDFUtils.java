@@ -6,6 +6,7 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDPage;
 import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -39,12 +40,12 @@ public class PDFUtils
     }
 
     public static void writeTextToPage(PDPageContentStream contentStream,
-                                       List<String> paragraphs) throws IOException
+                                       List<XWPFParagraph> paragraphs) throws IOException
     {
-        for (String paragraph :paragraphs)
+        for (XWPFParagraph paragraph :paragraphs)
         {
             contentStream.newLineAtOffset(0, -1.5f * 12.0f);
-            contentStream.showText(paragraph);
+            contentStream.showText(paragraph.getText());
         }
     }
 

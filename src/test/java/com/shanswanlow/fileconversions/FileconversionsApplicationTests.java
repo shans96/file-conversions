@@ -11,6 +11,7 @@ import org.apache.pdfbox.pdmodel.PDPageContentStream;
 import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
+import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -108,8 +109,11 @@ class FileconversionsApplicationTests
 	@DisplayName("Verify that writing to a page renders the exact text.")
 	void testWriteTextToPage() throws IOException
 	{
-		List<String> testParagraphs = Arrays.asList("foo", "bar");
-		String expectedText = "foo\r\nbar\r\n";
+		List<XWPFParagraph> testParagraphs = new XWPFDocument(
+				new FileInputStream("src/test/resources/Google Docs stylized document.docx"))
+				.getParagraphs();
+
+		String expectedText = "foo\r\nbar\r\nbaz\r\nquux\r\n";
 		PDDocument testDocument = new PDDocument();
 		PDPage testPage = new PDPage();
 		testDocument.addPage(testPage);

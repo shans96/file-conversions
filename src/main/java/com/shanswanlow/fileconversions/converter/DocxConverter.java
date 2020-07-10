@@ -10,7 +10,8 @@ import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 
 import java.io.*;
 import java.util.List;
-import static java.util.stream.Collectors.toList;
+
+import static com.shanswanlow.fileconversions.utils.PDFUtils.*;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class DocxConverter
@@ -23,16 +24,9 @@ public class DocxConverter
 
         PDPageContentStream contentStream = PDFUtils.createWriteablePage(output);
 
-        PDFUtils.initializeWriteablePage(contentStream);
-
-        List<String> paragraphs = docParagraphs
-                .stream()
-                .map(xwpfParagraph -> xwpfParagraph.getText())
-                .collect(toList());
-
-        PDFUtils.writeTextToPage(contentStream, paragraphs);
-
-        PDFUtils.closeWriteablePage(contentStream);
+        initializeWriteablePage(contentStream);
+        writeTextToPage(contentStream, docParagraphs);
+        closeWriteablePage(contentStream);
 
         return PDFUtils.documentToByteArray(output);
     }
