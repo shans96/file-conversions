@@ -14,6 +14,7 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.mockito.internal.matchers.Null;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
 
@@ -143,4 +144,17 @@ class FileconversionsApplicationTests
 		assertEquals(expectedTextTrimmed, strippedTextTrimmed);
 	}
 
+	@Test
+	@DisplayName("Verify that a closed document cannot be written to.")
+	void testCloseWriteablePage() throws IOException
+	{
+		PDDocument testDocument = new PDDocument();
+		PDPage testPage = new PDPage();
+		testDocument.addPage(testPage);
+		PDPageContentStream contentStream = new PDPageContentStream(testDocument, testPage);
+		contentStream.beginText();
+		PDFUtils.closeWriteablePage(contentStream);
+		// Resources released, stream.output becomes null. Underlying method uses output.
+		assertThrows(NullPointerException.class, contentStream::beginText);
+	}
 }
