@@ -1,6 +1,5 @@
 package com.shanswanlow.fileconversions.converter;
 
-import com.shanswanlow.fileconversions.utils.PDFUtils;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 import org.apache.pdfbox.pdmodel.PDDocument;
