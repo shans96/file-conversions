@@ -14,15 +14,14 @@ import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.internal.matchers.Null;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpHeaders;
+import org.springframework.test.util.ReflectionTestUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -157,4 +156,20 @@ class FileconversionsApplicationTests
 		// Resources released, stream.output becomes null. Underlying method uses output.
 		assertThrows(NullPointerException.class, contentStream::beginText);
 	}
+
+	@Test
+	@DisplayName("Verify that initializing a writeable page allows it to be written to.")
+	void testInitializeWriteablePage() throws IOException
+	{
+		PDDocument testDocument = new PDDocument();
+		PDPage testPage = new PDPage();
+		testDocument.addPage(testPage);
+		PDPageContentStream contentStream = new PDPageContentStream(testDocument, testPage);
+		PDFUtils.initializeWriteablePage(contentStream);
+		boolean isInTextMode = (Boolean)
+				ReflectionTestUtils.getField(contentStream, PDPageContentStream.class, "inTextMode");
+		assertTrue(isInTextMode);
+	}
+
+
 }
