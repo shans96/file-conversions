@@ -28,6 +28,6 @@ public class DocxConverter
         writeTextToPage(contentStream, docParagraphs);
         closeWriteablePage(contentStream);
 
-        return PDFUtils.documentToByteArray(output);
+        return documentToByteArray(output);
     }
 }
