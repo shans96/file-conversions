@@ -1,9 +1,5 @@
 package com.shanswanlow.fileconversions;
 
-import com.shanswanlow.fileconversions.utils.DocxUtils;
-import com.shanswanlow.fileconversions.utils.FilenameUtils;
-import com.shanswanlow.fileconversions.utils.HttpHeaderUtils;
-import com.shanswanlow.fileconversions.utils.PDFUtils;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -24,6 +20,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.List;
 
+import static com.shanswanlow.fileconversions.utils.DocxUtils.*;
+import static com.shanswanlow.fileconversions.utils.FilenameUtils.*;
+import static com.shanswanlow.fileconversions.utils.HttpHeaderUtils.*;
+import static com.shanswanlow.fileconversions.utils.PDFUtils.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
@@ -42,10 +42,10 @@ class FileconversionsApplicationTests
 		String caseFour = "quuux";
 
 		assertAll("filenameExtensions",
-				() -> assertEquals("foo", FilenameUtils.removeExtension(caseOne)),
-				() -> assertEquals("bar", FilenameUtils.removeExtension(caseTwo)),
-				() -> assertEquals("baz.quux", FilenameUtils.removeExtension(caseThree)),
-				() -> assertEquals("quuux", FilenameUtils.removeExtension(caseFour))
+				() -> assertEquals("foo", removeExtension(caseOne)),
+				() -> assertEquals("bar", removeExtension(caseTwo)),
+				() -> assertEquals("baz.quux", removeExtension(caseThree)),
+				() -> assertEquals("quuux", removeExtension(caseFour))
 		);
 	}
 
@@ -55,8 +55,7 @@ class FileconversionsApplicationTests
 	{
 		HttpHeaders expectedHeaders = new HttpHeaders();
 		expectedHeaders.setContentDispositionFormData("attachment", "foo.pdf");
-		HttpHeaders generatedHeaders = HttpHeaderUtils
-				.createPDFResponseHeaders("foo.doc");
+		HttpHeaders generatedHeaders = createPDFResponseHeaders("foo.doc");
 
 		assertEquals(expectedHeaders.hashCode(), generatedHeaders.hashCode());
 	}
@@ -73,9 +72,9 @@ class FileconversionsApplicationTests
 
 		// Note: Google Docs does not add docProps when it creates a docx, so 0 is expected.
 		assertAll("pageCount",
-				() -> assertEquals(0, DocxUtils.getPages(emptyDocument)),
-				() -> assertEquals(0, DocxUtils.getPages(googleDocument)),
-				() -> assertEquals(4, DocxUtils.getPages(wordDocument)));
+				() -> assertEquals(0, getPages(emptyDocument)),
+				() -> assertEquals(0, getPages(googleDocument)),
+				() -> assertEquals(4, getPages(wordDocument)));
 	}
 
 	@Test
@@ -88,7 +87,7 @@ class FileconversionsApplicationTests
 		testDocument.addPage(page);
 
 		PDDocument computedDocument = PDDocument.load(
-				PDFUtils.documentToByteArray(testDocument));
+				documentToByteArray(testDocument));
 		PDDocument expectedDocument = PDDocument.load(
 				new File("src/test/resources/emptyGeneratedDoc.pdf"));
 
@@ -121,7 +120,7 @@ class FileconversionsApplicationTests
 		contentStream.beginText();
 		contentStream.setFont(PDType1Font.HELVETICA, 12);
 
-		PDFUtils.writeTextToPage(contentStream, testParagraphs);
+		writeTextToPage(contentStream, testParagraphs);
 
 		contentStream.endText();
 		contentStream.close();
@@ -152,7 +151,7 @@ class FileconversionsApplicationTests
 		testDocument.addPage(testPage);
 		PDPageContentStream contentStream = new PDPageContentStream(testDocument, testPage);
 		contentStream.beginText();
-		PDFUtils.closeWriteablePage(contentStream);
+		closeWriteablePage(contentStream);
 		// Resources released, stream.output becomes null. Underlying method uses output.
 		assertThrows(NullPointerException.class, contentStream::beginText);
 	}
@@ -165,7 +164,7 @@ class FileconversionsApplicationTests
 		PDPage testPage = new PDPage();
 		testDocument.addPage(testPage);
 		PDPageContentStream contentStream = new PDPageContentStream(testDocument, testPage);
-		PDFUtils.initializeWriteablePage(contentStream);
+		initializeWriteablePage(contentStream);
 		boolean isInTextMode = (Boolean)
 				ReflectionTestUtils.getField(contentStream, PDPageContentStream.class, "inTextMode");
 		assertTrue(isInTextMode);
