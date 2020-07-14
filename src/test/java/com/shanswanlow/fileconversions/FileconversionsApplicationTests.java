@@ -158,7 +158,7 @@ class FileconversionsApplicationTests
 	}
 
 	@Test
-	@DisplayName("Verify that initializing a writeable page allows it to be written to.")
+	@DisplayName("Verify that initializing a writeable page sets the correct mode.")
 	void testInitializeWriteablePage() throws IOException
 	{
 		PDDocument testDocument = new PDDocument();
@@ -170,6 +170,4 @@ class FileconversionsApplicationTests
 				ReflectionTestUtils.getField(contentStream, PDPageContentStream.class, "inTextMode");
 		assertTrue(isInTextMode);
 	}
-
-
 }
