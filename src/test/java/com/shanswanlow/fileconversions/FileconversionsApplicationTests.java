@@ -191,13 +191,8 @@ class FileconversionsApplicationTests
 		List<String[]> documentParagraphs = docx
 				.getParagraphs()
 				.stream()
-				.map(xwpfParagraph -> xwpfParagraph.getText()
-						.replace(",", "")
-						.replace(".", "")
-						.replace("\r", "")
-						.replace("\n", "")
-						.split(" ")
-				).collect(Collectors.toList());
+				.map(xwpfParagraph -> getTestDocWords(xwpfParagraph.getText()))
+				.collect(Collectors.toList());
 
 
 		List<String> words = new ArrayList<>();
@@ -212,13 +207,16 @@ class FileconversionsApplicationTests
 
 		String[] docxWords = words.toArray(new String[words.size()]);
 
-		String[] pdfWords = strippedText
-				.replace(",", "")
+		String[] pdfWords = getTestDocWords(strippedText);
+
+		assertArrayEquals(docxWords, pdfWords);
+	}
+
+	String[] getTestDocWords(String text) {
+		return text.replace(",", "")
 				.replace(".", "")
 				.replace("\r", " ")
 				.replace("\n", "")
 				.split(" ");
-
-		assertArrayEquals(docxWords, pdfWords);
 	}
 }
