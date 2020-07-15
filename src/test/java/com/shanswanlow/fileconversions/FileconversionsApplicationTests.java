@@ -216,9 +216,6 @@ class FileconversionsApplicationTests
 
 		String[] pdfWords = getTestDocWords(strippedText);
 
-		System.out.println(Arrays.toString(docxWords));
-		System.out.println(Arrays.toString(pdfWords));
-
 		assertArrayEquals(docxWords, pdfWords);
 	}
 
@@ -226,7 +223,7 @@ class FileconversionsApplicationTests
 		return text.replace(",", "")
 				.replace(".", "")
 				.replace("\r", " ")
-				.replace("\n", "")
+				.replace("\n", " ")
 				.split(" ");
 	}
 }
