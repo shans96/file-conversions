@@ -216,6 +216,9 @@ class FileconversionsApplicationTests
 
 		String[] pdfWords = getTestDocWords(strippedText);
 
+		System.out.println(Arrays.toString(docxWords));
+		System.out.println(Arrays.toString(pdfWords));
+
 		assertArrayEquals(docxWords, pdfWords);
 	}
 
