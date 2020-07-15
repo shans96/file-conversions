@@ -9,6 +9,7 @@ import org.apache.pdfbox.pdmodel.font.PDType1Font;
 import org.apache.pdfbox.text.PDFTextStripper;
 import org.apache.poi.xwpf.usermodel.XWPFDocument;
 import org.apache.poi.xwpf.usermodel.XWPFParagraph;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -36,6 +37,12 @@ class FileconversionsApplicationTests
 {
 	@Test
 	void contextLoads() { }
+
+	@BeforeAll
+	static void setup()
+	{
+		System.setProperty("java.awt.headless", "true");
+	}
 
 	@Test
 	@DisplayName("Ensure that file extension removal removes the extension only.")
