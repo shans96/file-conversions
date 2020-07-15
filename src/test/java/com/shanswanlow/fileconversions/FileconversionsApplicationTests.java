@@ -1,5 +1,6 @@
 package com.shanswanlow.fileconversions;
 
+import com.shanswanlow.fileconversions.converter.DocxConverter;
 import org.apache.pdfbox.pdmodel.PDDocument;
 import org.apache.pdfbox.pdmodel.PDDocumentInformation;
 import org.apache.pdfbox.pdmodel.PDPage;
@@ -18,8 +19,12 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import static com.shanswanlow.fileconversions.converter.DocxConverter.docxToPDF;
 import static com.shanswanlow.fileconversions.utils.DocxUtils.*;
 import static com.shanswanlow.fileconversions.utils.FilenameUtils.*;
 import static com.shanswanlow.fileconversions.utils.HttpHeaderUtils.*;
@@ -168,5 +173,52 @@ class FileconversionsApplicationTests
 		boolean isInTextMode = (Boolean)
 				ReflectionTestUtils.getField(contentStream, PDPageContentStream.class, "inTextMode");
 		assertTrue(isInTextMode);
+	}
+
+	@Test
+	@DisplayName("Test that docx to PDF conversion copies the text exactly.")
+	void testDocxToPDF() throws IOException
+	{
+		XWPFDocument docx = new XWPFDocument(
+				new FileInputStream("src/test/resources/MS Word lipsum.docx"));
+		byte[] convertedDocx = docxToPDF(
+				new FileInputStream("src/test/resources/MS Word lipsum.docx"));
+		PDDocument pdfDocument = PDDocument.load(convertedDocx);
+
+		String strippedText = new PDFTextStripper()
+				.getText(pdfDocument);
+
+		List<String[]> documentParagraphs = docx
+				.getParagraphs()
+				.stream()
+				.map(xwpfParagraph -> xwpfParagraph.getText()
+						.replace(",", "")
+						.replace(".", "")
+						.replace("\r", "")
+						.replace("\n", "")
+						.split(" ")
+				).collect(Collectors.toList());
+
+
+		List<String> words = new ArrayList<>();
+
+		for (String[] paragraph: documentParagraphs)
+		{
+			for (String word: paragraph)
+			{
+				words.add(word);
+			}
+		}
+
+		String[] docxWords = words.toArray(new String[words.size()]);
+
+		String[] pdfWords = strippedText
+				.replace(",", "")
+				.replace(".", "")
+				.replace("\r", " ")
+				.replace("\n", "")
+				.split(" ");
+
+		assertArrayEquals(docxWords, pdfWords);
 	}
 }
