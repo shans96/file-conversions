@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -222,6 +223,7 @@ class FileconversionsApplicationTests
 				.replace(".", "")
 				.replace("\r", " ")
 				.replace("\n", " ")
+				.replace("  ", " ")
 				.split(" ");
 	}
 }
