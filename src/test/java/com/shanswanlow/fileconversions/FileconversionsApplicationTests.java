@@ -205,10 +205,7 @@ class FileconversionsApplicationTests
 
 		for (String[] paragraph: documentParagraphs)
 		{
-			for (String word: paragraph)
-			{
-				words.add(word);
-			}
+			words.addAll(Arrays.asList(paragraph));
 		}
 
 		String[] docxWords = words.toArray(new String[words.size()]);
