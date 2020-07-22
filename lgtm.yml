@@ -2,3 +2,7 @@ extraction:
   java:
     index:
       java_version: 14
+
+path_classifiers:
+  generated:
+    exclude: "**/*.java"
