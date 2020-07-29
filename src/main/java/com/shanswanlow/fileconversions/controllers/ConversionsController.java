@@ -23,4 +23,15 @@ public class ConversionsController
                 createFileResponseHeaders(document.getOriginalFilename(), ".pdf"),
                 HttpStatus.OK);
     }
+
+    @PostMapping(value = "/docx-to-md",
+            produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+    public ResponseEntity<byte[]> wordToMarkdown(@RequestParam("file") MultipartFile document)
+            throws IOException
+    {
+        byte[] convertedDocument = DocxConverter.docxToMarkdown(document.getInputStream());
+        return new ResponseEntity<>(convertedDocument,
+                createFileResponseHeaders(document.getOriginalFilename(), ".md"),
+                HttpStatus.OK);
+    }
 }
