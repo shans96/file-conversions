@@ -7,12 +7,13 @@ import org.springframework.http.HttpHeaders;
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class HttpHeaderUtils
 {
-    public static HttpHeaders createPDFResponseHeaders(String originalFilename)
+    public static HttpHeaders createFileResponseHeaders(String originalFilename,
+                                                        String newExtension)
     {
         org.springframework.http.HttpHeaders responseHeaders = new HttpHeaders();
         String outputFilename = FilenameUtils
                 .removeExtension(originalFilename)
-                .concat(".pdf");
+                .concat(newExtension);
         responseHeaders.setContentDispositionFormData("attachment",
                 outputFilename);
         return responseHeaders;

@@ -8,7 +8,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
-import static com.shanswanlow.fileconversions.utils.HttpHeaderUtils.createPDFResponseHeaders;
+import static com.shanswanlow.fileconversions.utils.HttpHeaderUtils.createFileResponseHeaders;
 
 @RestController
 public class ConversionsController
@@ -20,7 +20,7 @@ public class ConversionsController
     {
         byte[] convertedDocument = DocxConverter.docxToPDF(document.getInputStream());
         return new ResponseEntity<>(convertedDocument,
-                createPDFResponseHeaders(document.getOriginalFilename()),
+                createFileResponseHeaders(document.getOriginalFilename(), ".pdf"),
                 HttpStatus.OK);
     }
 }
