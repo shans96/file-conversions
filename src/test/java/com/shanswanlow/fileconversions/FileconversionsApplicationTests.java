@@ -66,7 +66,7 @@ class FileconversionsApplicationTests
 	{
 		HttpHeaders expectedHeaders = new HttpHeaders();
 		expectedHeaders.setContentDispositionFormData("attachment", "foo.pdf");
-		HttpHeaders generatedHeaders = createPDFResponseHeaders("foo.doc");
+		HttpHeaders generatedHeaders = createFileResponseHeaders("foo.doc", ".pdf");
 
 		assertEquals(expectedHeaders.hashCode(), generatedHeaders.hashCode());
 	}
